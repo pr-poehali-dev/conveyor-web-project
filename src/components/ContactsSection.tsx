@@ -11,7 +11,8 @@ import funcUrls from "../../backend/func2url.json";
 const contactInfo = [
   { icon: "Phone", label: "Телефон", value: "+7 (952) 930-44-08", href: "tel:+79529304408" },
   { icon: "Mail", label: "E-mail", value: "sale@holzerflexo.com", href: "mailto:sale@holzerflexo.com" },
-  { icon: "MapPin", label: "Офис", value: "г. Москва, ул. Дорожная, 60Б", href: "#" },
+  { icon: "MapPin", label: "Офис Москва", value: "г. Москва, ул. Дорожная, 60Б", href: "#" },
+  { icon: "MapPin", label: "Офис Новосибирск", value: "г. Новосибирск, ул. Толмачёвская, 43/1", href: "#" },
   { icon: "Clock", label: "Режим работы", value: "Пн–Пт: 8:00–18:00, экстренный выезд 24/7", href: "#" },
 ];
 
