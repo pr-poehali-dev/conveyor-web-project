@@ -72,14 +72,14 @@ def handler(event, context):
         html_body = f"""
         <html>
         <body style="font-family: Arial, sans-serif; color: #333;">
-            <h2 style="color: #e8690a;">Новая заявка с сайта КонвейерСервис</h2>
+            <h2 style="color: #e8690a;">Новая заявка с сайта ReBelt</h2>
             <table style="border-collapse: collapse; width: 100%; max-width: 500px;">
                 <tr><td style="padding: 8px; border-bottom: 1px solid #eee; font-weight: bold;">Имя:</td><td style="padding: 8px; border-bottom: 1px solid #eee;">{name}</td></tr>
                 <tr><td style="padding: 8px; border-bottom: 1px solid #eee; font-weight: bold;">Телефон:</td><td style="padding: 8px; border-bottom: 1px solid #eee;">{phone}</td></tr>
                 <tr><td style="padding: 8px; border-bottom: 1px solid #eee; font-weight: bold;">Email:</td><td style="padding: 8px; border-bottom: 1px solid #eee;">{email or 'не указан'}</td></tr>
                 <tr><td style="padding: 8px; border-bottom: 1px solid #eee; font-weight: bold;">Сообщение:</td><td style="padding: 8px; border-bottom: 1px solid #eee;">{message or 'не указано'}</td></tr>
             </table>
-            <p style="color: #999; font-size: 12px; margin-top: 20px;">Отправлено с сайта КонвейерСервис</p>
+            <p style="color: #999; font-size: 12px; margin-top: 20px;">Отправлено с сайта ReBelt</p>
         </body>
         </html>
         """

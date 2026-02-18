@@ -25,7 +25,7 @@ const Header = () => {
             <Icon name="Wrench" size={20} className="text-primary-foreground" />
           </div>
           <span className="font-heading text-xl font-bold tracking-wide uppercase">
-            Конвейер<span className="text-primary">Сервис</span>
+            Re<span className="text-primary">Belt</span>
           </span>
         </a>
 
@@ -42,9 +42,9 @@ const Header = () => {
         </nav>
 
         <div className="hidden lg:flex items-center gap-3">
-          <a href="tel:+78001234567" className="flex items-center gap-2 text-sm font-medium text-foreground">
+          <a href="tel:+79529304408" className="flex items-center gap-2 text-sm font-medium text-foreground">
             <Icon name="Phone" size={16} className="text-primary" />
-            8 (800) 123-45-67
+            +7 (952) 930-44-08
           </a>
           <Button size="sm" asChild>
             <a href="#contacts">Оставить заявку</a>
@@ -74,9 +74,9 @@ const Header = () => {
             ))}
           </nav>
           <div className="mt-4 flex flex-col gap-2">
-            <a href="tel:+78001234567" className="flex items-center gap-2 text-sm font-medium">
+            <a href="tel:+79529304408" className="flex items-center gap-2 text-sm font-medium">
               <Icon name="Phone" size={16} className="text-primary" />
-              8 (800) 123-45-67
+              +7 (952) 930-44-08
             </a>
             <Button size="sm" className="w-full" asChild>
               <a href="#contacts">Оставить заявку</a>

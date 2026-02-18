@@ -9,7 +9,7 @@ import { useToast } from "@/hooks/use-toast";
 import funcUrls from "../../backend/func2url.json";
 
 const contactInfo = [
-  { icon: "Phone", label: "Телефон", value: "8 (800) 123-45-67", href: "tel:+78001234567" },
+  { icon: "Phone", label: "Телефон", value: "+7 (952) 930-44-08", href: "tel:+79529304408" },
   { icon: "Mail", label: "E-mail", value: "info@conveyorservice.ru", href: "mailto:info@conveyorservice.ru" },
   { icon: "MapPin", label: "Офис", value: "г. Москва, ул. Промышленная, д. 15", href: "#" },
   { icon: "Clock", label: "Режим работы", value: "Пн–Пт: 8:00–18:00, экстренный выезд 24/7", href: "#" },
@@ -138,10 +138,10 @@ const ContactsSection = () => {
                   Конвейер встал? Звоните на горячую линию — выезжаем круглосуточно!
                 </p>
                 <a
-                  href="tel:+78001234567"
+                  href="tel:+79529304408"
                   className="font-heading text-2xl font-bold text-primary hover:underline"
                 >
-                  8 (800) 123-45-67
+                  +7 (952) 930-44-08
                 </a>
               </CardContent>
             </Card>

@@ -10,7 +10,7 @@ const Footer = () => (
               <Icon name="Wrench" size={16} className="text-primary-foreground" />
             </div>
             <span className="font-heading text-lg font-bold tracking-wide uppercase">
-              Конвейер<span className="text-primary">Сервис</span>
+              Re<span className="text-primary">Belt</span>
             </span>
           </div>
           <p className="text-sm text-muted-foreground leading-relaxed">
@@ -34,7 +34,7 @@ const Footer = () => (
           <ul className="space-y-2 text-sm text-muted-foreground">
             <li className="flex items-center gap-2">
               <Icon name="Phone" size={14} className="text-primary" />
-              8 (800) 123-45-67
+              +7 (952) 930-44-08
             </li>
             <li className="flex items-center gap-2">
               <Icon name="Mail" size={14} className="text-primary" />
@@ -50,7 +50,7 @@ const Footer = () => (
 
       <div className="border-t border-border pt-6 flex flex-col md:flex-row items-center justify-between gap-4">
         <p className="text-xs text-muted-foreground">
-          © 2008–2026 КонвейерСервис. Все права защищены.
+          © 2008–2026 ReBelt. Все права защищены.
         </p>
         <p className="text-xs text-muted-foreground">
           Работаем по всей России и СНГ
