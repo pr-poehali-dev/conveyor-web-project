@@ -6,6 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import Icon from "@/components/ui/icon";
 import { useToast } from "@/hooks/use-toast";
+import funcUrls from "../../backend/func2url.json";
 
 const contactInfo = [
   { icon: "Phone", label: "Телефон", value: "8 (800) 123-45-67", href: "tel:+78001234567" },
@@ -17,14 +18,31 @@ const contactInfo = [
 const ContactsSection = () => {
   const { toast } = useToast();
   const [form, setForm] = useState({ name: "", phone: "", email: "", message: "" });
+  const [sending, setSending] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    toast({
-      title: "Заявка отправлена!",
-      description: "Наш менеджер свяжется с вами в ближайшее время.",
-    });
-    setForm({ name: "", phone: "", email: "", message: "" });
+    setSending(true);
+
+    try {
+      const res = await fetch(funcUrls["send-lead"], {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      const data = await res.json();
+
+      if (res.ok) {
+        toast({ title: "Заявка отправлена!", description: "Наш менеджер свяжется с вами в ближайшее время." });
+        setForm({ name: "", phone: "", email: "", message: "" });
+      } else {
+        toast({ title: "Ошибка", description: data.error || "Попробуйте позже", variant: "destructive" });
+      }
+    } catch {
+      toast({ title: "Ошибка сети", description: "Проверьте подключение и попробуйте снова", variant: "destructive" });
+    } finally {
+      setSending(false);
+    }
   };
 
   return (
@@ -85,9 +103,9 @@ const ContactsSection = () => {
                   className="bg-background"
                 />
               </div>
-              <Button type="submit" size="lg" className="w-full font-heading uppercase tracking-wider">
-                <Icon name="Send" size={18} className="mr-2" />
-                Отправить заявку
+              <Button type="submit" size="lg" className="w-full font-heading uppercase tracking-wider" disabled={sending}>
+                <Icon name={sending ? "Loader2" : "Send"} size={18} className={`mr-2 ${sending ? "animate-spin" : ""}`} />
+                {sending ? "Отправка..." : "Отправить заявку"}
               </Button>
             </form>
           </div>
