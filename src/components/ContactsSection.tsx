@@ -10,8 +10,8 @@ import funcUrls from "../../backend/func2url.json";
 
 const contactInfo = [
   { icon: "Phone", label: "Телефон", value: "+7 (952) 930-44-08", href: "tel:+79529304408" },
-  { icon: "Mail", label: "E-mail", value: "info@conveyorservice.ru", href: "mailto:info@conveyorservice.ru" },
-  { icon: "MapPin", label: "Офис", value: "г. Москва, ул. Промышленная, д. 15", href: "#" },
+  { icon: "Mail", label: "E-mail", value: "sale@holzerflexo.com", href: "mailto:sale@holzerflexo.com" },
+  { icon: "MapPin", label: "Офис", value: "г. Москва, ул. Дорожная, 60Б", href: "#" },
   { icon: "Clock", label: "Режим работы", value: "Пн–Пт: 8:00–18:00, экстренный выезд 24/7", href: "#" },
 ];
 

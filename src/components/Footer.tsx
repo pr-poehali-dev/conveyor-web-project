@@ -38,11 +38,11 @@ const Footer = () => (
             </li>
             <li className="flex items-center gap-2">
               <Icon name="Mail" size={14} className="text-primary" />
-              info@conveyorservice.ru
+              sale@holzerflexo.com
             </li>
             <li className="flex items-center gap-2">
               <Icon name="MapPin" size={14} className="text-primary" />
-              г. Москва, ул. Промышленная, 15
+              г. Москва, ул. Дорожная, 60Б
             </li>
           </ul>
         </div>
