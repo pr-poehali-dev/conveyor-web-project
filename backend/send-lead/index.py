@@ -1,14 +1,13 @@
 import json
 import os
-import smtplib
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
+import urllib.request
+import urllib.parse
 
 import psycopg2
 
 
 def handler(event, context):
-    """Сохранение заявки в БД и отправка на email"""
+    """Сохранение заявки в БД и отправка уведомления в Telegram"""
 
     if event.get('httpMethod') == 'OPTIONS':
         return {
@@ -46,7 +45,7 @@ def handler(event, context):
 
     db_url = os.environ.get('DATABASE_URL', '')
     schema = os.environ.get('MAIN_DB_SCHEMA', 'public')
-    email_sent = False
+    tg_sent = False
 
     if db_url:
         conn = psycopg2.connect(db_url)
@@ -61,47 +60,35 @@ def handler(event, context):
         cur.close()
         conn.close()
 
-    smtp_host = os.environ.get('SMTP_HOST', '')
-    smtp_port = int(os.environ.get('SMTP_PORT', '465'))
-    smtp_user = os.environ.get('SMTP_USER', '')
-    smtp_password = os.environ.get('SMTP_PASSWORD', '')
-    notify_email = os.environ.get('NOTIFY_EMAIL', smtp_user)
+    bot_token = os.environ.get('TELEGRAM_BOT_TOKEN', '')
+    chat_id = os.environ.get('TELEGRAM_CHAT_ID', '')
 
-    if smtp_host and smtp_user and smtp_password:
-        subject = f'Новая заявка с сайта от {name}'
-        html_body = f"""
-        <html>
-        <body style="font-family: Arial, sans-serif; color: #333;">
-            <h2 style="color: #e8690a;">Новая заявка с сайта ReBelt</h2>
-            <table style="border-collapse: collapse; width: 100%; max-width: 500px;">
-                <tr><td style="padding: 8px; border-bottom: 1px solid #eee; font-weight: bold;">Имя:</td><td style="padding: 8px; border-bottom: 1px solid #eee;">{name}</td></tr>
-                <tr><td style="padding: 8px; border-bottom: 1px solid #eee; font-weight: bold;">Телефон:</td><td style="padding: 8px; border-bottom: 1px solid #eee;">{phone}</td></tr>
-                <tr><td style="padding: 8px; border-bottom: 1px solid #eee; font-weight: bold;">Email:</td><td style="padding: 8px; border-bottom: 1px solid #eee;">{email or 'не указан'}</td></tr>
-                <tr><td style="padding: 8px; border-bottom: 1px solid #eee; font-weight: bold;">Сообщение:</td><td style="padding: 8px; border-bottom: 1px solid #eee;">{message or 'не указано'}</td></tr>
-            </table>
-            <p style="color: #999; font-size: 12px; margin-top: 20px;">Отправлено с сайта ReBelt</p>
-        </body>
-        </html>
-        """
+    if bot_token and chat_id:
+        text = (
+            "📋 *Новая заявка с сайта ReBelt*\n\n"
+            f"👤 *Имя:* {_escape_md(name)}\n"
+            f"📞 *Телефон:* {_escape_md(phone)}\n"
+            f"✉️ *Email:* {_escape_md(email or 'не указан')}\n"
+            f"💬 *Сообщение:* {_escape_md(message or 'не указано')}"
+        )
 
-        msg = MIMEMultipart('alternative')
-        msg['Subject'] = subject
-        msg['From'] = smtp_user
-        msg['To'] = notify_email
-        msg.attach(MIMEText(html_body, 'html'))
+        payload = json.dumps({
+            'chat_id': chat_id,
+            'text': text,
+            'parse_mode': 'MarkdownV2',
+        }).encode('utf-8')
 
-        if smtp_port == 465:
-            server = smtplib.SMTP_SSL(smtp_host, smtp_port, timeout=10)
-        else:
-            server = smtplib.SMTP(smtp_host, smtp_port, timeout=10)
-            server.starttls()
+        req = urllib.request.Request(
+            f'https://api.telegram.org/bot{bot_token}/sendMessage',
+            data=payload,
+            headers={'Content-Type': 'application/json'},
+            method='POST',
+        )
+        resp = urllib.request.urlopen(req, timeout=10)
+        if resp.status == 200:
+            tg_sent = True
 
-        server.login(smtp_user, smtp_password)
-        server.sendmail(smtp_user, [notify_email], msg.as_string())
-        server.quit()
-        email_sent = True
-
-        if db_url:
+        if db_url and tg_sent:
             conn = psycopg2.connect(db_url)
             conn.autocommit = True
             cur = conn.cursor()
@@ -112,5 +99,12 @@ def handler(event, context):
     return {
         'statusCode': 200,
         'headers': cors,
-        'body': json.dumps({'success': True, 'message': 'Заявка принята', 'email_sent': email_sent}),
+        'body': json.dumps({'success': True, 'message': 'Заявка принята', 'tg_sent': tg_sent}),
     }
+
+
+def _escape_md(text):
+    special = ['_', '*', '[', ']', '(', ')', '~', '`', '>', '#', '+', '-', '=', '|', '{', '}', '.', '!']
+    for ch in special:
+        text = text.replace(ch, '\\' + ch)
+    return text
