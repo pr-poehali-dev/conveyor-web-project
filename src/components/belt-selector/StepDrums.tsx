@@ -20,8 +20,13 @@ export default function StepDrums({ filters, setFilters, onNext, onPrev }: Props
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
+
+        {/* Диаметр барабана */}
         <div>
-          <p className="font-medium mb-3">Диаметр приводного барабана</p>
+          <p className="font-medium mb-1">Диаметр приводного барабана</p>
+          <p className="text-xs text-muted-foreground mb-3">
+            Выберите диаметр вашего барабана. Если не знаете — пропустите, все ленты подойдут.
+          </p>
           <div className="flex flex-wrap gap-2">
             {drumOptions.map((opt) => (
               <button
@@ -44,8 +49,12 @@ export default function StepDrums({ filters, setFilters, onNext, onPrev }: Props
           </div>
         </div>
 
+        {/* Угол наклона */}
         <div>
-          <p className="font-medium mb-3">Угол наклона конвейера</p>
+          <p className="font-medium mb-1">Угол наклона конвейера</p>
+          <p className="text-xs text-muted-foreground mb-3">
+            Для горизонтальных конвейеров — пропустите.
+          </p>
           <div className="flex flex-wrap gap-2">
             {angleOptions.map((opt) => (
               <button
