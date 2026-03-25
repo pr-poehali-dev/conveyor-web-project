@@ -4,6 +4,9 @@ import { getServiceBySlug, services } from "@/data/services";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import Icon from "@/components/ui/icon";
+import useSEO from "@/hooks/useSEO";
+
+const SITE_URL = "https://rebelt.ru";
 
 const renderContent = (content: string) => {
   const lines = content.split("\n");
@@ -88,6 +91,39 @@ const renderContent = (content: string) => {
   return result;
 };
 
+const ServicePageSEO = ({ slug, title, desc }: { slug: string; title: string; desc: string }) => {
+  const canonical = `${SITE_URL}/services/${slug}`;
+  const fullTitle = `${title} — ReBelt | Профессиональный ремонт конвейерных лент`;
+  const fullDesc = `${desc} Работаем по всей России и СНГ с 2008 года. Звоните: +7 (952) 930-44-08`;
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    "name": title,
+    "description": desc,
+    "url": canonical,
+    "provider": {
+      "@type": "LocalBusiness",
+      "name": "ReBelt",
+      "telephone": "+7-952-930-44-08",
+      "url": SITE_URL,
+      "address": [
+        { "@type": "PostalAddress", "addressLocality": "Москва", "streetAddress": "ул. Дорожная, 60Б", "addressCountry": "RU" },
+        { "@type": "PostalAddress", "addressLocality": "Новосибирск", "streetAddress": "ул. Толмачёвская, 43/1", "addressCountry": "RU" }
+      ]
+    },
+    "areaServed": { "@type": "Country", "name": "Россия" },
+    "hasOfferCatalog": {
+      "@type": "OfferCatalog",
+      "name": title,
+      "itemListElement": [{ "@type": "Offer", "itemOffered": { "@type": "Service", "name": title } }]
+    }
+  };
+
+  useSEO({ title: fullTitle, description: fullDesc, canonical, jsonLd });
+  return null;
+};
+
 const ServicePage = () => {
   const { slug } = useParams<{ slug: string }>();
   const service = getServiceBySlug(slug || "");
@@ -110,6 +146,8 @@ const ServicePage = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <ServicePageSEO slug={service.slug} title={service.title} desc={service.desc} />
+
       <header className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-md border-b border-border">
         <div className="container mx-auto flex items-center justify-between h-16 px-4">
           <Link to="/" className="flex items-center gap-2">
@@ -131,6 +169,22 @@ const ServicePage = () => {
 
       <main className="pt-24 pb-24">
         <div className="container mx-auto px-4 max-w-4xl">
+          <nav aria-label="Breadcrumb" className="mb-6">
+            <ol className="flex items-center gap-2 text-sm text-muted-foreground" itemScope itemType="https://schema.org/BreadcrumbList">
+              <li itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem">
+                <Link to="/" className="hover:text-primary transition-colors" itemProp="item">
+                  <span itemProp="name">Главная</span>
+                </Link>
+                <meta itemProp="position" content="1" />
+              </li>
+              <li><Icon name="ChevronRight" size={14} /></li>
+              <li itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem">
+                <span itemProp="name">{service.title}</span>
+                <meta itemProp="position" content="2" />
+              </li>
+            </ol>
+          </nav>
+
           <div className="flex items-center gap-4 mb-8">
             <div className="w-14 h-14 rounded bg-primary/10 flex items-center justify-center shrink-0">
               <Icon name={service.icon} size={28} className="text-primary" />

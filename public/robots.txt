@@ -1,4 +1,22 @@
+User-agent: *
+Allow: /
+
 User-agent: Googlebot
+Allow: /
+
+User-agent: YandexBot
+Allow: /
+
+User-agent: YandexImages
+Allow: /
+
+User-agent: YandexVideo
+Allow: /
+
+User-agent: YandexMedia
+Allow: /
+
+User-agent: YandexBlogs
 Allow: /
 
 User-agent: Bingbot
@@ -10,5 +28,4 @@ Allow: /
 User-agent: facebookexternalhit
 Allow: /
 
-User-agent: *
-Allow: /
+Sitemap: https://rebelt.ru/sitemap.xml
