@@ -21,8 +21,8 @@ interface Filters {
 
 const defaultFilters: Filters = {
   material: "",
-  envTempMin: -25,
-  matTempMax: 60,
+  envTempMin: 0,
+  matTempMax: 0,
   hasImpact: false,
   needsOil: false,
   needsFire: false,
@@ -84,14 +84,23 @@ const typeBadgeColor: Record<string, string> = {
 
 function filterBelts(filters: Filters): Belt[] {
   return belts.filter((b) => {
+    // Материал
     if (filters.material && !b.materials.includes(filters.material)) return false;
-    if (b.temp_min > filters.envTempMin) return false;
-    if (b.temp_max < filters.matTempMax) return false;
-    if (filters.hasImpact && !b.features.includes("impact") && b.breaking_strength < 400) return false;
+    // Лента должна выдерживать окружающую температуру (temp_min ленты ≤ нужному минимуму среды)
+    if (filters.envTempMin !== 0 && b.temp_min > filters.envTempMin) return false;
+    // Лента должна выдерживать температуру материала (temp_max ленты ≥ нужному максимуму материала)
+    if (filters.matTempMax !== 0 && b.temp_max < filters.matTempMax) return false;
+    // Ударные нагрузки
+    if (filters.hasImpact && !b.features.includes("impact")) return false;
+    // Маслостойкость
     if (filters.needsOil && !b.features.includes("oil")) return false;
+    // Огнестойкость
     if (filters.needsFire && !b.features.includes("fire")) return false;
+    // Пищевое применение
     if (filters.needsFood && !b.features.includes("food")) return false;
+    // Диаметр барабана: лента подходит если её мин. барабан ≤ барабану пользователя
     if (filters.drumDiameter > 0 && b.min_drum_diameter > filters.drumDiameter) return false;
+    // Угол: лента должна поддерживать нужный угол
     if (filters.angle > 0 && b.max_angle < filters.angle) return false;
     return true;
   });
@@ -242,7 +251,7 @@ export default function BeltSelectorSection() {
                       <button
                         key={opt.label}
                         onClick={() =>
-                          setFilters((f) => ({ ...f, matTempMax: opt.max }))
+                          setFilters((f) => ({ ...f, matTempMax: f.matTempMax === opt.max ? 0 : opt.max }))
                         }
                         className={`px-3 py-1.5 rounded-full text-sm border transition-all ${
                           filters.matTempMax === opt.max
@@ -267,7 +276,7 @@ export default function BeltSelectorSection() {
                       <button
                         key={opt.label}
                         onClick={() =>
-                          setFilters((f) => ({ ...f, envTempMin: opt.min }))
+                          setFilters((f) => ({ ...f, envTempMin: f.envTempMin === opt.min ? 0 : opt.min }))
                         }
                         className={`px-3 py-1.5 rounded-full text-sm border transition-all ${
                           filters.envTempMin === opt.min
