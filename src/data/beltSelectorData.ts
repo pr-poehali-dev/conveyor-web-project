@@ -1,17 +1,15 @@
 import { belts, type Belt } from "@/data/belts";
 
-export type Step = "material" | "conditions" | "drums" | "result";
-
 export interface Filters {
-  material: string;       // ключ материала из materialLabels
-  matTempMax: number;     // макс. температура материала (0 = не выбрано)
-  needsCold: boolean;     // нужна морозостойкость до -60°C (Крайний Север)
-  hasImpact: boolean;     // есть ударные нагрузки
-  needsOil: boolean;      // нужна маслостойкость
-  needsFire: boolean;     // нужна огнестойкость (шахты)
-  needsFood: boolean;     // пищевой контакт
-  drumDiameter: number;   // диаметр барабана пользователя в мм (0 = не важно)
-  angle: number;          // угол наклона конвейера в градусах (0 = не важно)
+  material: string;
+  matTempMax: number;
+  needsCold: boolean;
+  hasImpact: boolean;
+  needsOil: boolean;
+  needsFire: boolean;
+  needsFood: boolean;
+  drumDiameter: number;
+  angle: number;
 }
 
 export const defaultFilters: Filters = {
@@ -49,7 +47,13 @@ export const materialGroups = [
   },
 ];
 
-// Диаметры барабанов — value = реальный диаметр барабана пользователя в мм
+export const tempOptions = [
+  { label: "До 60°C", sublabel: "обычный", max: 60 },
+  { label: "До 120°C", sublabel: "горячий", max: 120 },
+  { label: "До 150°C", sublabel: "очень горячий", max: 150 },
+  { label: "До 200°C", sublabel: "раскалённый", max: 200 },
+];
+
 export const drumOptions = [
   { label: "100–200 мм", value: 200 },
   { label: "200–400 мм", value: 400 },
@@ -78,47 +82,57 @@ export const typeBadgeColor: Record<string, string> = {
   pu: "bg-green-100 text-green-800",
 };
 
-export const steps: { id: Step; label: string; icon: string }[] = [
-  { id: "material", label: "Материал", icon: "Layers" },
-  { id: "conditions", label: "Условия", icon: "Thermometer" },
-  { id: "drums", label: "Геометрия", icon: "Circle" },
-  { id: "result", label: "Результат", icon: "CheckCircle" },
-];
+// Возвращает ленты для конкретного материала (без остальных фильтров)
+function getBeltsForMaterial(material: string): Belt[] {
+  if (!material) return belts;
+  return belts.filter((b) => b.materials.includes(material));
+}
 
+// Какие опции реально доступны для выбранного материала
+export interface AvailableOptions {
+  tempMaxValues: number[];
+  hasCold: boolean;
+  hasImpact: boolean;
+  hasOil: boolean;
+  hasFire: boolean;
+  hasFood: boolean;
+  drumDiameterValues: number[];
+  angleValues: number[];
+}
+
+export function getAvailableOptions(material: string): AvailableOptions {
+  const pool = getBeltsForMaterial(material);
+
+  return {
+    tempMaxValues: tempOptions
+      .filter((opt) => pool.some((b) => b.temp_max >= opt.max))
+      .map((opt) => opt.max),
+    hasCold: pool.some((b) => b.temp_min <= -60),
+    hasImpact: pool.some((b) => b.features.includes("impact")),
+    hasOil: pool.some((b) => b.features.includes("oil")),
+    hasFire: pool.some((b) => b.features.includes("fire")),
+    hasFood: pool.some((b) => b.features.includes("food")),
+    drumDiameterValues: drumOptions
+      .filter((opt) => pool.some((b) => b.min_drum_diameter <= opt.value))
+      .map((opt) => opt.value),
+    angleValues: angleOptions
+      .filter((opt) => pool.some((b) => b.max_angle >= opt.value))
+      .map((opt) => opt.value),
+  };
+}
+
+// Основная фильтрация
 export function filterBelts(filters: Filters): Belt[] {
   return belts.filter((b) => {
-    // 1. Материал — лента должна явно поддерживать выбранный материал
     if (filters.material && !b.materials.includes(filters.material)) return false;
-
-    // 2. Температура материала — лента должна выдержать указанную температуру
-    //    matTempMax=0 означает "не выбрано", пропускаем фильтр
     if (filters.matTempMax > 0 && b.temp_max < filters.matTempMax) return false;
-
-    // 3. Морозостойкость — только если выбран Крайний Север (-60°C)
-    //    Требуем ленты с temp_min не выше -60
     if (filters.needsCold && b.temp_min > -60) return false;
-
-    // 4. Ударные нагрузки
     if (filters.hasImpact && !b.features.includes("impact")) return false;
-
-    // 5. Маслостойкость
     if (filters.needsOil && !b.features.includes("oil")) return false;
-
-    // 6. Огнестойкость (шахты)
     if (filters.needsFire && !b.features.includes("fire")) return false;
-
-    // 7. Пищевой контакт
     if (filters.needsFood && !b.features.includes("food")) return false;
-
-    // 8. Диаметр барабана — лента подходит если её минимальный барабан
-    //    не превышает диаметр барабана пользователя
-    //    drumDiameter=0 означает "не важно"
     if (filters.drumDiameter > 0 && b.min_drum_diameter > filters.drumDiameter) return false;
-
-    // 9. Угол наклона — лента должна поддерживать нужный угол
-    //    angle=0 означает "не важно"
     if (filters.angle > 0 && b.max_angle < filters.angle) return false;
-
     return true;
   });
 }
