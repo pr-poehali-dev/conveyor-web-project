@@ -55,12 +55,12 @@ const Header = () => {
           </span>
         </Link>
 
-        <nav className="hidden lg:flex items-center gap-6">
+        <nav className="hidden lg:flex items-center gap-3">
           {navLinks.slice(0, 1).map((link) => (
             <button
               key={link.href}
               onClick={() => handleAnchorClick(link.href)}
-              className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+              className="text-xs font-medium text-muted-foreground hover:text-primary transition-colors"
             >
               {link.label}
             </button>
@@ -71,9 +71,9 @@ const Header = () => {
             onMouseEnter={() => setServicesOpen(true)}
             onMouseLeave={() => setServicesOpen(false)}
           >
-            <button className="flex items-center gap-1 text-sm font-medium text-muted-foreground hover:text-primary transition-colors">
+            <button className="flex items-center gap-1 text-xs font-medium text-muted-foreground hover:text-primary transition-colors">
               Услуги
-              <Icon name="ChevronDown" size={14} />
+              <Icon name="ChevronDown" size={12} />
             </button>
             {servicesOpen && (
               <div className="absolute top-full left-0 w-64 pt-2 z-50">
@@ -97,19 +97,19 @@ const Header = () => {
             <button
               key={link.href}
               onClick={() => handleAnchorClick(link.href)}
-              className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+              className="text-xs font-medium text-muted-foreground hover:text-primary transition-colors"
             >
               {link.label}
             </button>
           ))}
         </nav>
 
-        <div className="hidden lg:flex items-center gap-3">
-          <a href="tel:+79529304408" className="flex items-center gap-2 text-sm font-medium text-foreground">
-            <Icon name="Phone" size={16} className="text-primary" />
+        <div className="hidden lg:flex items-center gap-2">
+          <a href="tel:+79529304408" className="flex items-center gap-1.5 text-xs font-medium text-foreground">
+            <Icon name="Phone" size={14} className="text-primary" />
             +7 (952) 930-44-08
           </a>
-          <Button size="sm" onClick={() => handleAnchorClick("#contacts")}>
+          <Button size="sm" className="text-xs h-7 px-3" onClick={() => handleAnchorClick("#contacts")}>
             Оставить заявку
           </Button>
         </div>
