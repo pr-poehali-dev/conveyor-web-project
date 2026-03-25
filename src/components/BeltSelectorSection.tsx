@@ -9,8 +9,8 @@ type Step = "material" | "conditions" | "drums" | "result";
 
 interface Filters {
   material: string;
-  tempMin: number;
-  tempMax: number;
+  envTempMin: number;
+  matTempMax: number;
   hasImpact: boolean;
   needsOil: boolean;
   needsFire: boolean;
@@ -21,8 +21,8 @@ interface Filters {
 
 const defaultFilters: Filters = {
   material: "",
-  tempMin: -25,
-  tempMax: 60,
+  envTempMin: -25,
+  matTempMax: 60,
   hasImpact: false,
   needsOil: false,
   needsFire: false,
@@ -85,8 +85,8 @@ const typeBadgeColor: Record<string, string> = {
 function filterBelts(filters: Filters): Belt[] {
   return belts.filter((b) => {
     if (filters.material && !b.materials.includes(filters.material)) return false;
-    if (b.temp_min > filters.tempMin) return false;
-    if (b.temp_max < filters.tempMax) return false;
+    if (b.temp_min > filters.envTempMin) return false;
+    if (b.temp_max < filters.matTempMax) return false;
     if (filters.hasImpact && !b.features.includes("impact") && b.breaking_strength < 400) return false;
     if (filters.needsOil && !b.features.includes("oil")) return false;
     if (filters.needsFire && !b.features.includes("fire")) return false;
@@ -234,18 +234,18 @@ export default function BeltSelectorSection() {
                   <p className="font-medium mb-3">Температура транспортируемого материала</p>
                   <div className="flex flex-wrap gap-2">
                     {[
-                      { label: "До 60°C (обычный)", min: -25, max: 60 },
-                      { label: "До 120°C (горячий)", min: -25, max: 120 },
-                      { label: "До 150°C (очень горячий)", min: -25, max: 150 },
-                      { label: "До 200°C (раскалённый)", min: -25, max: 200 },
+                      { label: "До 60°C (обычный)", max: 60 },
+                      { label: "До 120°C (горячий)", max: 120 },
+                      { label: "До 150°C (очень горячий)", max: 150 },
+                      { label: "До 200°C (раскалённый)", max: 200 },
                     ].map((opt) => (
                       <button
                         key={opt.label}
                         onClick={() =>
-                          setFilters((f) => ({ ...f, tempMin: opt.min, tempMax: opt.max }))
+                          setFilters((f) => ({ ...f, matTempMax: opt.max }))
                         }
                         className={`px-3 py-1.5 rounded-full text-sm border transition-all ${
-                          filters.tempMax === opt.max
+                          filters.matTempMax === opt.max
                             ? "bg-primary text-primary-foreground border-primary"
                             : "border-border hover:border-primary hover:text-primary bg-background"
                         }`}
@@ -267,10 +267,10 @@ export default function BeltSelectorSection() {
                       <button
                         key={opt.label}
                         onClick={() =>
-                          setFilters((f) => ({ ...f, tempMin: opt.min }))
+                          setFilters((f) => ({ ...f, envTempMin: opt.min }))
                         }
                         className={`px-3 py-1.5 rounded-full text-sm border transition-all ${
-                          filters.tempMin === opt.min
+                          filters.envTempMin === opt.min
                             ? "bg-primary text-primary-foreground border-primary"
                             : "border-border hover:border-primary hover:text-primary bg-background"
                         }`}
