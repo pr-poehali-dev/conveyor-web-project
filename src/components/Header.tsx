@@ -75,7 +75,8 @@ const Header = () => {
               <Icon name="ChevronDown" size={14} />
             </button>
             {servicesOpen && (
-              <div className="absolute top-full left-0 mt-2 w-64 bg-background border border-border rounded-lg shadow-lg py-2 z-50">
+              <div className="absolute top-full left-0 w-64 pt-2 z-50">
+              <div className="bg-background border border-border rounded-lg shadow-lg py-2">
                 {services.map((s) => (
                   <Link
                     key={s.slug}
@@ -86,6 +87,7 @@ const Header = () => {
                     {s.title}
                   </Link>
                 ))}
+              </div>
               </div>
             )}
           </div>
