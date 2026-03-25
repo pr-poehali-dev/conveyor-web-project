@@ -1,4 +1,16 @@
+import { Link } from "react-router-dom";
 import Icon from "@/components/ui/icon";
+
+const services = [
+  { slug: "goryachaya-vulkanizaciya", title: "Горячая вулканизация" },
+  { slug: "holodnaya-vulkanizaciya", title: "Холодная вулканизация" },
+  { slug: "mekhanicheskie-soedineniya", title: "Механические соединения" },
+  { slug: "remont-konveyernykh-lent", title: "Ремонт конвейерных лент" },
+  { slug: "futerovka-barabanov", title: "Футеровка барабанов" },
+  { slug: "tekhnicheskoe-obsluzhivanie", title: "Техническое обслуживание" },
+  { slug: "rezinotkanevye-lenty", title: "Резинотканевые ленты" },
+  { slug: "pvkh-lenty", title: "ПВХ конвейерные ленты" },
+];
 
 const Footer = () => (
   <footer className="py-12 border-t border-border">
@@ -20,12 +32,17 @@ const Footer = () => (
 
         <div>
           <h4 className="font-heading font-bold uppercase text-sm mb-4">Услуги</h4>
-          <ul className="space-y-2 text-sm text-muted-foreground">
-            <li>Горячая вулканизация</li>
-            <li>Холодная вулканизация</li>
-            <li>Механические соединения</li>
-            <li>Ремонт конвейерных лент</li>
-            <li>Футеровка барабанов</li>
+          <ul className="space-y-2 text-sm">
+            {services.map((s) => (
+              <li key={s.slug}>
+                <Link
+                  to={`/services/${s.slug}`}
+                  className="text-muted-foreground hover:text-primary transition-colors"
+                >
+                  {s.title}
+                </Link>
+              </li>
+            ))}
           </ul>
         </div>
 
