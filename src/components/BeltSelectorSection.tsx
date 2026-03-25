@@ -85,8 +85,8 @@ const typeBadgeColor: Record<string, string> = {
 function filterBelts(filters: Filters): Belt[] {
   return belts.filter((b) => {
     if (filters.material && !b.materials.includes(filters.material)) return false;
-    if (filters.tempMin < b.temp_min) return false;
-    if (filters.tempMax > b.temp_max) return false;
+    if (b.temp_min > filters.tempMin) return false;
+    if (b.temp_max < filters.tempMax) return false;
     if (filters.hasImpact && !b.features.includes("impact") && b.breaking_strength < 400) return false;
     if (filters.needsOil && !b.features.includes("oil")) return false;
     if (filters.needsFire && !b.features.includes("fire")) return false;
