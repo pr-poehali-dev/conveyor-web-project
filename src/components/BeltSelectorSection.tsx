@@ -93,9 +93,17 @@ export default function BeltSelectorSection() {
           <h2 className="font-heading text-3xl md:text-4xl font-bold mb-4">
             Подберём конвейерную ленту под ваши условия
           </h2>
-          <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+          <p className="text-muted-foreground text-lg max-w-2xl mx-auto mb-4">
             Выберите материал и укажите условия — система сразу покажет подходящие марки
           </p>
+          {filters.material && (
+            <div className="inline-flex items-center gap-2 bg-primary/10 text-primary border border-primary/20 rounded-full px-4 py-1.5 text-sm font-medium">
+              <Icon name="CheckCircle" size={15} />
+              {results.length === 0
+                ? "Нет подходящих марок"
+                : `Найдено марок: ${results.length}`}
+            </div>
+          )}
         </div>
 
         <div className="max-w-4xl mx-auto space-y-4">
