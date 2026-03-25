@@ -18,6 +18,7 @@ const navLinks = [
   { label: "Главная", href: "#hero" },
   { label: "О компании", href: "#about" },
   { label: "Калькулятор", href: "#calculator" },
+  { label: "Подбор ленты", href: "#belt-selector" },
   { label: "Портфолио", href: "#portfolio" },
   { label: "Регионы", href: "#regions" },
   { label: "Галерея", href: "#gallery" },
