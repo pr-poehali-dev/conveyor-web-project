@@ -86,24 +86,28 @@ export default function BeltSelectorSection() {
   return (
     <section id="belt-selector" className="py-20 bg-muted/30">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-12">
-          <Badge variant="outline" className="mb-4 text-primary border-primary">
-            Подборщик ленты
-          </Badge>
-          <h2 className="font-heading text-3xl md:text-4xl font-bold mb-4">
-            Подберём конвейерную ленту под ваши условия
-          </h2>
-          <p className="text-muted-foreground text-lg max-w-2xl mx-auto mb-4">
+        <div className="mb-8">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div className="flex items-center gap-3 flex-wrap">
+              <Badge variant="outline" className="text-primary border-primary">
+                Подборщик ленты
+              </Badge>
+              <h2 className="font-heading text-xl font-bold">
+                Подберём конвейерную ленту под ваши условия
+              </h2>
+            </div>
+            {filters.material && (
+              <div className="inline-flex items-center gap-2 bg-primary/10 text-primary border border-primary/20 rounded-full px-4 py-1.5 text-sm font-medium">
+                <Icon name="CheckCircle" size={15} />
+                {results.length === 0
+                  ? "Нет подходящих марок"
+                  : `Найдено марок: ${results.length}`}
+              </div>
+            )}
+          </div>
+          <p className="text-muted-foreground text-sm mt-2">
             Выберите материал и укажите условия — система сразу покажет подходящие марки
           </p>
-          {filters.material && (
-            <div className="inline-flex items-center gap-2 bg-primary/10 text-primary border border-primary/20 rounded-full px-4 py-1.5 text-sm font-medium">
-              <Icon name="CheckCircle" size={15} />
-              {results.length === 0
-                ? "Нет подходящих марок"
-                : `Найдено марок: ${results.length}`}
-            </div>
-          )}
         </div>
 
         <div className="max-w-4xl mx-auto space-y-4">
